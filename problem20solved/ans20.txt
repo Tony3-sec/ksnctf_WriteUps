@@ -1,0 +1,14 @@
+## FLAG
+FLAG_Q20_5926535897
+
+## Hint is provided as below
+FLAG_Q20_{first 10-digit prime found in consecutive digits of π}
+
+So I manually picked first 10-digist of PI and checked whether its prime or not.
+
+## prime checking site
+http://pn.ideeile.com/
+
+Answer is 5926535897
+
+3.141{5926535897}9323846264338327950288

