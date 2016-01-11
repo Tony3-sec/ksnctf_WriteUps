@@ -3,7 +3,7 @@ This is WriteUps for ksnctf
 ## How to commit files?
 git clone https://github.com/tatsuhiko36/ksnctf_WriteUps.git
 git add [file]
-git commit -m "write a comment for commit"
+git commit -a -m "write a comment for commit"
 git remote add origin https://github.com/tatsuhiko36/ksnctf_WriteUps.git
 git push -u origin master
 
