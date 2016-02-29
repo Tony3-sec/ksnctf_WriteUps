@@ -1,0 +1,51 @@
+## FLAG
+FLAG_iySDmApNegJvwmxN
+
+## You can download the db file from the server
+
+http://ctfq.sweetduet.info:10080/~q35/database.db
+
+## Once you download, connect to db file using sqlit3 command
+
+sqlite3 database.db
+
+## There are two tables
+
+sqlite> .table
+user   user2
+
+## table "user"
+
+sqlite> .dump user
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE VIEW user AS SELECT id, SUBSTR(password, 6,1)||SUBSTR(password, 2,1)||SUBSTR(password,13,1)||SUBSTR(password, 1,1)||SUBSTR(password,17,1)||SUBSTR(password, 8,1)||SUBSTR(password,15,1)||SUBSTR(password,19,1)||SUBSTR(password, 3,1)||SUBSTR(password, 4,1)||SUBSTR(password,12,1)||SUBSTR(password,21,1)||SUBSTR(password, 5,1)||SUBSTR(password,11,1)||SUBSTR(password,16,1)||SUBSTR(password, 7,1)||SUBSTR(password,10,1)||SUBSTR(password,18,1)||SUBSTR(password, 9,1)||SUBSTR(password,14,1)||SUBSTR(password,20,1) AS password FROM user2;
+COMMIT;
+
+## table "user2"
+
+sqlite> .dump user2
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE user2 (id TEXT, password TEXT);
+INSERT INTO "user2" VALUES('root','GLDmNFJimveAAxyg_wSNp');
+COMMIT;
+
+## It seems table "user" has the flag. Let's query
+
+sqlite> select * from user;
+root|FLAG_iySDmApNegJvwmxN
+
+## Flag is FLAG_iySDmApNegJvwmxN
+
+## First, I didn't came up with querying the table "user" and did some scripting like below.
+## It was time consuming :(
+
+mylist = [6, 2, 13, 1, 17, 8, 15, 19, 3, 4, 12, 21, 5, 11, 16, 7, 10, 18, 9, 14, 20]
+mystr = 'GLDmNFJimveAAxyg_wSNp'
+result = ''
+
+for i in mylist:
+	result += mystr[i-1]
+	
+print(result)

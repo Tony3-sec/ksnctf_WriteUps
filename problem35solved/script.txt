@@ -1,0 +1,17 @@
+mylist = [6, 2, 13, 1, 17, 8, 15, 19, 3, 4, 12, 21, 5, 11, 16, 7, 10, 18, 9, 14, 20]
+mystr = 'GLDmNFJimveAAxyg_wSNp'
+result = ''
+
+for i in mylist:
+	result += mystr[i-1]
+	
+print(result)
+
+
+
+
+
+
+
+
+
