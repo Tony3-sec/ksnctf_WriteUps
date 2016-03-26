@@ -184,8 +184,9 @@ var p=Array(70,152,195,284,475,612,791,896,810,850,737,1332,1469,1120,1470,832,1
 <p.length;i++)if(t.charCodeAt(i)*(i+1)!=p[i])f=false;if(f)alert("(」・ω・)」う
 ー!(/・ω・)/にゃー!");}if(!f)alert("No");return false;});});'
 
-OK, I am almost done!
+OK, I am almost done! I am not pro of javascript but let's read it.
 
+#########################################################################################################
 '$(function(){$("form").submit(function(){var t=$(\'input[type="text"]\').val();
 var p=Array(70,152,195,284,475,612,791,896,810,850,737,1332,1469,1120,1470,832,1785,2196,1520,1480,1449);
 var f=false;
@@ -196,10 +197,25 @@ if(p.length==t.length){
 }
 if(!f)alert("No");
 return false;});});'
+#########################################################################################################
+
+It seems that what script doing is compare the user input with Array p and if it match,
+pop the alert dialog with message "("(」・ω・)」うー!(/・ω・)/にゃー!")".
+If not match, pop the alert with message "No".
 
 The Array data looks like a flag.
 
-Array(70,152,195,284,475,612,791,896,810,850,737,1332,1469,1120,1470,832,1785,2196,1520,1480,1449);
+	Array(70,152,195,284,475,612,791,896,810,850,737,1332,1469,1120,1470,832,1785,2196,1520,1480,1449);
+
+When comparing the user input and Array p, script is doing some calculation.
+
+	for(var i=0;i<p.length;i++)if(t.charCodeAt(i)*(i+1)!=p[i])f=false;
+	
+It's multipling the char code of user input with "i+1"
+So all I have to do is do the opposite calculation. 
+In this case, divide the char code of Array P like below.
+
+	p.charCodeAt(i)/(i+1);
 
 To get the flag, run below javascript.
 
