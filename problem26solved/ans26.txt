@@ -33,6 +33,8 @@ http://ctfq.sweetduet.info:10080/~q26/index.pl/flag.txt
 	
 ## Let's check the source code of "index.pl"
 
+http://ctfq.sweetduet.info:10080/~q26/index.pl/index.pl
+
 --------------------------------------------
 
 #!/usr/bin/perl
