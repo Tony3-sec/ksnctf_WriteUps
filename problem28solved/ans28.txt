@@ -30,7 +30,7 @@ When I opened "composite.png", I got the message as follows
 	
 So I combined "secret.png" (Renamed from "secret.zip") as well.
 
-# convert share1.png share2.png secretOnly.png -composite composite.png
+# convert share1.png share2.png secret.png -composite composite.png
 
 Then I got the flag from "composite.png".
 
