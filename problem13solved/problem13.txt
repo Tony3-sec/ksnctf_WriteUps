@@ -1,3 +1,0 @@
-SSH: ctfq.sweetduet.info:10022
-ID: q13
-Pass: 8zvWx00MakSCQuGq
