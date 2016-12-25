@@ -1,0 +1,10 @@
+## FLAG
+FLAG_5ux7zK2NKSH8fSGA
+
+It was basic authentication.
+Simply get the base64 encoded value from Authorization header and decode.
+
+Authorization: Basic cTg6RkxBR181dXg3eksyTktTSDhmU0dB
+
+echo "cTg6RkxBR181dXg3eksyTktTSDhmU0dB" | base64 -d
+q8:FLAG_5ux7zK2NKSH8fSGA

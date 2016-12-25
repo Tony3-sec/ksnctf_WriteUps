@@ -1,0 +1,78 @@
+https://ja.wikipedia.org/wiki/%E7%94%BB%E9%9D%A2%E8%A7%A3%E5%83%8F%E5%BA%A6
+
+http://takepara.blogspot.jp/2009/02/png.html
+
+# file secret.zip 
+secret.zip: PNG image data, 640 x 480, 8-bit/color RGBA, non-interlaced
+
+# unzip -Z secret.zip 
+Archive:  secret.zip
+Zip file size: 282561 bytes, number of entries: 2
+-rw-a--     2.0 fat    94601 b- defN 12-Jul-13 13:28 share1.png
+-rw-a--     2.0 fat    94902 b- defN 12-Jul-13 13:28 share2.png
+2 files, 189503 bytes uncompressed, 187091 bytes compressed:  1.3%
+
+
+
+# file problem28.zip 
+problem28.zip: Zip archive data, at least v2.0 to extract
+[root@NAKAHARA problem28]# 
+[root@NAKAHARA problem28]# cp secret.zip secret_zip.png
+[root@NAKAHARA problem28]# file secret_zip.png 
+secret_zip.png: PNG image data, 640 x 480, 8-bit/color RGBA, non-interlaced
+[root@NAKAHARA problem28]# unzip -Z problem28.zip 
+Archive:  problem28.zip
+Zip file size: 168 bytes, number of entries: 1
+-rw-a--     2.0 fat       44 t- stor 16-May-15 00:22 problem28.txt
+1 file, 44 bytes uncompressed, 44 bytes compressed:  0.0%
+
+[root@NAKAHARA problem28]# md5sum secret.zip 
+cb98f9fa7592c83f02bf8b0b5328b7d2  secret.zip
+[root@NAKAHARA problem28]# md5sum share1.png 
+92b76a2a2019eb30d82b414d357be42d  share1.png
+[root@NAKAHARA problem28]# md5sum share2.png 
+e35630ca5e5ea2e155d0d9a5741b2b49  share2.png
+
+[root@NAKAHARA problem28]# file share1.png 
+share1.png: PNG image data, 640 x 480, 8-bit/color RGBA, non-interlaced
+[root@NAKAHARA problem28]# file share2.png 
+share2.png: PNG image data, 640 x 480, 8-bit/color RGBA, non-interlaced
+[root@NAKAHARA problem28]# file secret.zip 
+secret.zip: PNG image data, 640 x 480, 8-bit/color RGBA, non-interlaced
+
+[root@NAKAHARA problem28]# ls -lh secret.zip 
+-rwxrwx--- 1 root vboxsf 276K May 15 00:21 secret.zip
+[root@NAKAHARA problem28]# ls -lh share1.png 
+-rwxrwx--- 1 root vboxsf 93K Jul 13  2012 share1.png
+[root@NAKAHARA problem28]# ls -lh share2.png 
+-rwxrwx--- 1 root vboxsf 93K Jul 13  2012 share2.png
+
+
+https://github.com/RobinDavid/LSB-Steganography
+http://yusuke1581.hatenablog.com/entry/2014/11/16/031927
+http://ser1zw.hatenablog.com/entry/2012/10/28/085233
+
+https://ja.wikipedia.org/wiki/Portable_Network_Graphics
+https://en.wikipedia.org/wiki/Portable_Network_Graphics
+
+# online decoder
+http://www.mobilefish.com/services/steganography/steganography.php
+http://manytools.org/hacker-tools/steganography-encode-text-into-image/
+
+https://en.wikipedia.org/wiki/Steganography
+http://tkmr.hatenablog.com/entry/2014/07/28/223854
+
+
+http://www.x68uec.org/files/other/press/2002/lecture/gisou.html
+# use IE for browsing
+http://infoseek_rip.g.ribbon.to/sugayajuku.hp.infoseek.co.jp/warez/gisou.html
+http://www.geocities.co.jp/SiliconValley/8287/gisou.html
+http://www.h7.dion.ne.jp/~bakuretu/tool_etc/gisou_.htm
+
+## PNG to BMP converter
+https://convertio.co/ja/png-bmp/
+
+http://hoshi-sano.hatenablog.com/entry/2013/08/18/112550
+http://iwb.jp/png8-png24-png32-analyze/
+
+http://gazouiriro.seesaa.net/category/5207600-1.html

