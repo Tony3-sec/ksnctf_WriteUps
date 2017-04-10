@@ -1,0 +1,5 @@
+FLAG_qazyetF6icoWCvjN
+
+Use FTK Imager to recover img file.
+
+The file "Liberty Leading the People.jpg" contains flag in Alternative Data Stream.

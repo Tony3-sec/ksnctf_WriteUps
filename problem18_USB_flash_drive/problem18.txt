@@ -1,0 +1,3 @@
+Find the flag.
+
+http://ksnctf.sweetduet.info/q/18/drive.zip
