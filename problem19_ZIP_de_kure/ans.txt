@@ -1,0 +1,56 @@
+## Flag
+FLAG_PghfJf8X8mXEqWsk
+
+Reference for ZIP:
+https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE-6.2.2.TXT
+
+$ unzip -Z flag.zip
+Archive:  flag.zip
+Zip file size: 256719 bytes, number of entries: 2
+-rw-a--     2.0 fat      304 Bl stor 12-Jun-03 18:14 flag.html
+-rw-a--     2.0 fat   255964 Bl stor 12-Jun-03 18:10 Standard-lock-key.jpg
+
+$ unzip flag.zip
+Archive:  flag.zip
+Hint:
+- It is known that the encryption system of ZIP is weak against known-plaintext attacks.
+- We employ ZIP format not for compression but for encryption.
+[flag.zip] flag.html password
+
+## ZIP file is password protected. Hint is known-plaintext attacks.
+
+https://www.hackthis.co.uk/articles/known-plaintext-attack-cracking-zip-files
+https://www.elcomsoft.com/help/en/archpr/known_plaintext_attack_(zip).html
+
+To perform plaintext attack you need to:
+ 
+•	Find an unencrypted file which also exists in the password-protected archive.
+•	Compress it with the same method and the same ZIP archiver as used in the encrypted archive
+
+## If you google the file "Standard-lock-key.jpg", you can find the original file in wikipedia
+
+NOTE:
+Compression method is very important. 
+When I check flag.zip with unzip -Z option: 
+
+$ unzip -Z flag.zip
+Archive:  flag.zip
+Zip file size: 256719 bytes, number of entries: 2
+-rw-a--     2.0 fat      304 Bl stor 12-Jun-03 18:14 flag.html
+-rw-a--     2.0 fat   255964 Bl stor 12-Jun-03 18:10 Standard-lock-key.jpg
+
+The files are "stor" which means they are not compressed. So I have to zip the file "Standard-lock-key.jpg" without compression. I used zip -0 command to achieve this.
+
+$ zip -0 no.zip Standard-lock-key.jpg
+  adding: Standard-lock-key.jpg (stored 0%)
+
+
+Now perform known-plaintext attack. I used pkcrack for the tool. I ran below commands:
+
+pkcrack -C flag.zip -c Standard-lock-key.jpg -p Standard-lock-key.jpg -P no.zip -d decrypted.zip
+
+
+unzip the decrypted.zip. "flag.html" will be extracted. 
+Open "flag.html" and you can get a flag.
+
+
