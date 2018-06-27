@@ -152,7 +152,7 @@ A2=$(echo -n "$method:$uri_path" | md5)
 
 response=$(echo -n "$A1:$nonce:$nc:$cnonce:$qop:$A2" | md5)
 
-curl -i -H "Authorization: Digest username=\"q9\", realm=\"secret\", nonce=\"$nonce\", uri=\"/~q9/flag.html\", algorithm=MD5, response=\"$response\", qop=$qop, nc=$nc, cnonce=\"$cnonce\"" $url
+curl -i -H "Authorization: Digest username=\"q9\", realm=\"secret\", nonce=\"$nonce\", uri=\"$uri_path\", algorithm=MD5, response=\"$response\", qop=$qop, nc=$nc, cnonce=\"$cnonce\"" $url
 '''
 
 The scrip will:
