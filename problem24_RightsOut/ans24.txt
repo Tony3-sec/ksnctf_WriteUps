@@ -1,0 +1,107 @@
+## FLAG
+FLAG_EhiAfPAAY7JG3UZ2
+
+rightsout.exe is .Net binary.
+
+Open file with dnSpy and decompile the code.
+
+rightsout -> Form1 -> check()
+
+check() is a function to show flag via MessageBox
+
+private void check()
+{
+	if (Array.IndexOf<bool>(this.state, true) < 0)
+	{
+		MessageBox.Show("Congratulations!");
+		int[] array = new int[]
+		{
+			1,
+			7,
+			16,
+			11,
+			14,
+			19,
+			20,
+			18
+		};
+		bool flag = true;
+		for (int i = 0; i < 8; i++)
+		{
+			if (this.hist[i] != array[i])
+			{
+				flag = false;
+			}
+		}
+		if (flag)
+		{
+			int[] array2 = new int[]
+			{
+				85,
+				111,
+				117,
+				43,
+				104,
+				127,
+				117,
+				117,
+				33,
+				110,
+				99,
+				43,
+				72,
+				95,
+				85,
+				85,
+				94,
+				66,
+				120,
+				98,
+				79,
+				117,
+				68,
+				83,
+				64,
+				94,
+				39,
+				65,
+				73,
+				32,
+				65,
+				72,
+				51
+			};
+			string text = "";
+			for (int j = 0; j < array2.Length; j++)
+			{
+				text += (char)(array2[j] ^ array[j % array.Length]);
+			}
+			MessageBox.Show(text);
+		}
+	}
+}
+
+
+## wrote following python script to get flag
+
+#!/usr/bin/env python
+
+array = "1,7,16,11,14,19,20,18"
+array = array.split(',')
+
+array2 = "85,111,117,43,104,127,117,117,33,110,99,43,72,95,85,85,94,66,120,98,79,117,68,83,64,94,39,65,73,32,65,72,51"
+array2 = array2.split(',')
+
+array_len = len(array)
+array2_len = len(array2)
+
+flag = ""
+
+for i in range(array2_len):
+	flag += chr(int(array2[i]) ^ int(array[i % array_len]))
+print(flag)
+
+'''
+./rightsout-solver.py
+The flag is FLAG_EhiAfPAAY7JG3UZ2
+'''

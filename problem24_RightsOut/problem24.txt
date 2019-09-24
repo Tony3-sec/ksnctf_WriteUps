@@ -1,0 +1,3 @@
+Solving the puzzle is not sufficient.
+
+http://ksnctf.sweetduet.info/q/24/rightsout.exe
