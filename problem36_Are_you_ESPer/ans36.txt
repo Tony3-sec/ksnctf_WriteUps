@@ -68,7 +68,29 @@ int main()
 }
 '''
 
-Compile above program and send the answer to remote server
+Compile above program. The program works perfectly on local.
+
+'''
+$ ./answer.out | ./esp
+Level 1/20, Challenge 1/10
+? Correct!
+
+Level 2/20, Challenge 1/8
+? Correct!
+
+Level 3/20, Challenge 1/6
+? Correct!
+
+Level 4/20, Challenge 1/4
+? Correct!
+
+Level 5/20, Challenge 1/2
+? Correct!
+
+~ REDACTED ~
+'''
+
+However, does not work on remote server.
 
 '''
 ./answer.out | nc ctfq.sweetduet.info 10777
