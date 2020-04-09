@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 }
 '''
 
-And the wrote following bash script to bruteforce the collect system time:
+And the wrote following bash script to bruteforce the correct system time:
 
 '''
 #!/bin/bash
