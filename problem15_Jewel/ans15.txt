@@ -1,0 +1,162 @@
+http://ksnctf.sweetduet.info/q/15/Jewel.apk
+
+Jewel.apk is an Android apk file.
+
+To analyze the file, first I decompiled apk file to jar file and opened jar file with JD-GUI:
+
+'''
+d2j-dex2jar -f -o out.jar Jewel.apk
+'''
+
+I was able to obtain program source code. To make it more readable, I converted jar file to class file and then converted the class file to java file:
+
+convert jar file to class file
+'''
+unzip out.jar -d ./Classes
+'''
+
+convert class file to java file
+'''
+jad.exe -p JewelActivity.class > JewelActivity.java
+'''
+
+Below is the java source code:
+
+'''
+// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.kpdus.com/jad.html
+// Decompiler options: packimports(3) 
+
+package info.sweetduet.ksnctf.jewel;
+
+import android.app.Activity;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.widget.ImageView;
+import android.widget.Toast;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+// Referenced classes of package info.sweetduet.ksnctf.jewel:
+//            b, a
+
+public class JewelActivity extends Activity
+{
+
+    public JewelActivity()
+    {
+    }
+
+    public void onCreate(Bundle bundle)
+    {
+        super.onCreate(bundle);
+        setContentView(0x7f030000);
+        bundle = ((TelephonyManager)getSystemService("phone")).getDeviceId();
+        Object obj;
+        obj = MessageDigest.getInstance("SHA-256");
+        ((MessageDigest) (obj)).update(bundle.getBytes("ASCII"));
+        BigInteger biginteger = JVM INSTR new #54  <Class BigInteger>;
+        biginteger.BigInteger(((MessageDigest) (obj)).digest());
+        obj = biginteger.toString(16);
+        if(bundle.substring(0, 8).equals("99999991")) goto _L2; else goto _L1
+_L1:
+        bundle = JVM INSTR new #76  <Class android.app.AlertDialog$Builder>;
+        bundle.android.app.AlertDialog.Builder(this);
+        bundle = bundle.setMessage("Your device is not supported").setCancelable(false);
+        obj = JVM INSTR new #91  <Class b>;
+        ((b) (obj)).b(this);
+        bundle.setPositiveButton("OK", ((android.content.DialogInterface.OnClickListener) (obj))).show();
+_L3:
+        return;
+_L2:
+label0:
+        {
+            if(((String) (obj)).equals("356280a58d3c437a45268a0b226d8cccad7b5dd28f5d1b37abf1873cc426a8a5"))
+                break label0;
+            bundle = JVM INSTR new #76  <Class android.app.AlertDialog$Builder>;
+            bundle.android.app.AlertDialog.Builder(this);
+            bundle = bundle.setMessage("You are not a valid user").setCancelable(false);
+            obj = JVM INSTR new #110 <Class a>;
+            ((a) (obj)).a(this);
+            bundle.setPositiveButton("OK", ((android.content.DialogInterface.OnClickListener) (obj))).show();
+        }
+          goto _L3
+        try
+        {
+            Object obj1 = getResources().openRawResource(0x7f040000);
+            byte abyte0[] = new byte[((InputStream) (obj1)).available()];
+            ((InputStream) (obj1)).read(abyte0);
+            obj1 = JVM INSTR new #144 <Class SecretKeySpec>;
+            Object obj2 = JVM INSTR new #146 <Class StringBuilder>;
+            ((StringBuilder) (obj2)).StringBuilder("!");
+            ((SecretKeySpec) (obj1)).SecretKeySpec(((StringBuilder) (obj2)).append(bundle).toString().getBytes("ASCII"), "AES");
+            obj2 = JVM INSTR new #163 <Class IvParameterSpec>;
+            ((IvParameterSpec) (obj2)).IvParameterSpec("kLwC29iMc4nRMuE5".getBytes());
+            bundle = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            bundle.init(2, ((java.security.Key) (obj1)), ((java.security.spec.AlgorithmParameterSpec) (obj2)));
+            bundle = bundle.doFinal(abyte0);
+            ImageView imageview = JVM INSTR new #185 <Class ImageView>;
+            imageview.ImageView(this);
+            imageview.setImageBitmap(BitmapFactory.decodeByteArray(bundle, 0, bundle.length));
+            setContentView(imageview);
+        }
+        // Misplaced declaration of an exception variable
+        catch(Bundle bundle)
+        {
+            Toast.makeText(this, bundle.toString(), 1).show();
+        }
+          goto _L3
+    }
+}
+'''
+
+The program first checks if the first 8 bytes of deviceID is "99999991" and then check if sha256 hash for full deviceID is "356280a58d3c437a45268a0b226d8cccad7b5dd28f5d1b37abf1873cc426a8a5". If checks are successful, the program AES decrypts raw resource which is "jewel_c.png" using "!" + deviceID as a key and "kLwC29iMc4nRMuE5" as initial vector. 
+
+I googled about android deviceID and found that the ID most likely consist of 15 digits. We already know that first 8bytes of deviceID is "99999991" so we only need to brute force remaining 7bytes.
+
+I wrote following script to brute force deviceID:
+
+'''
+#!/usr/bin/env python
+
+import hashlib
+
+deviceID_hash = "356280a58d3c437a45268a0b226d8cccad7b5dd28f5d1b37abf1873cc426a8a5"
+first_eight_bytes = "99999991"
+cnt = 1
+
+while (cnt <= 9999999):
+	latter_seven_bytes = '{:0=7}'.format(cnt)
+	print(first_eight_bytes + latter_seven_bytes)
+	calculated_hash = hashlib.sha256(first_eight_bytes + latter_seven_bytes).hexdigest()
+	#print(calculated_hash)
+	if (calculated_hash == deviceID_hash):
+		print("DeviceID: " + first_eight_bytes + latter_seven_bytes)
+		print("AES key: " + str("!") + first_eight_bytes + latter_seven_bytes)
+		break
+	cnt += 1
+'''
+
+After running script for few minutes, I got the deviceID and AES key:
+'''
+$ python AESkey-bruteforce.py
+
+<REDACTED>
+999999913371335
+999999913371336
+999999913371337
+DeviceID: 999999913371337
+AES key: !999999913371337
+'''
+
+I used cyberchef to AES decrypt "jewel_c.png". The file decrypted to PNG image file saying that "The flag is in the comment of this image". I simply ran strings on the file and found the following flag:
+
+'''
+FLAG_9X4bfxgLTi5KtQss
+''' 
