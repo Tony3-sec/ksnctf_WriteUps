@@ -1,4 +1,4 @@
-livesout.exe is Windows PE 32 executable.
+livesout.exe is Windows PE executable (64bit).
 
 I opened the file in IDA and identified the following interesting code which appears to be a code to show flag:
 
