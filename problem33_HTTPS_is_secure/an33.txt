@@ -1,0 +1,306 @@
+'''
+Decrypt it.
+http://ksnctf.sweetduet.info/q/33/q33.pcap
+Hint: Two certificates are similar.
+'''
+
+q33.pcap is PCAP file for SSL encrypted traffic. Cipher suite used is TLS_RSA_WITH_RC4_128_MD5 (0x0004). Three certificates are found from PCAP as follows:
+(bash onliner to extract certs: echo -n '<hex stream for cert>' | xxd -r -p | openssl x509 -inform DER -text > out.crt)
+
+'''
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 10734611180456597475 (0x94f8fffe850d57e3)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: O=ksnctf, CN=ksnctf.sweetduet.info
+        Validity
+            Not Before: Nov  4 01:49:56 2013 GMT
+            Not After : Nov  2 01:49:56 2023 GMT
+        Subject: O=ksnctf, CN=ksnctf.sweetduet.info
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:ba:7d:3b:1e:d6:7d:7e:cf:ad:8d:53:6b:ee:35:
+                    31:74:7b:e9:4e:a9:e4:ac:14:03:a3:30:0f:be:fd:
+                    fc:4e:e2:41:36:25:19:fb:8e:28:ba:a2:72:79:40:
+                    8d:30:3f:38:c3:ae:19:72:b2:cd:5b:15:2e:da:a2:
+                    e9:a2:92:23:f1:c9:11:99:a0:37:4c:5a:06:d1:8c:
+                    0b:55:d7:67:b7:84:45:be:75:5c:65:78:7a:8b:c5:
+                    e0:a9:28:87:28:45:7c:91:44:1e:03:21:65:06:c8:
+                    7e:69:6e:b5:4f:4b:14:90:82:b1:bd:83:d2:77:2d:
+                    7a:c8:7c:b6:f0:6c:61:ca:0d:af:ec:27:5c:9a:30:
+                    a7:5c:9f:c8:d3:9a:65:67:21:01:62:cd:eb:5f:68:
+                    66:70:b5:85:07:29:c1:2f:3d:69:d5:16:ab:28:81:
+                    8c:43:46:0d:3d:05:31:e6:b2:5e:02:30:a1:84:fb:
+                    1b:b8:a0:0e:e0:b7:37:e2:48:d7:e6:a7:0b:c6:ab:
+                    e2:f3:d9:15:c3:d7:58:31:13:c8:d7:28:55:c0:e3:
+                    cb:50:53:14:80:ea:ec:e5:db:ab:5e:a1:64:17:88:
+                    b3:07:9d:3d:b0:2a:0f:e1:21:fd:1b:41:1c:10:8a:
+                    86:c4:b0:2f:4c:8f:9b:2a:83:86:cf:90:8b:4b:53:
+                    19:83
+                Exponent: 65537 (0x10001)
+
+                ~ REDACTED ~
+'''
+
+'''
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 13099412999179996463 (0xb5ca76b816420d2f)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: O=ksnctf, CN=ksnctf.sweetduet.info
+        Validity
+            Not Before: Nov  4 02:00:55 2013 GMT
+            Not After : Dec  4 02:00:55 2013 GMT
+        Subject: C=JP, L=Otowa, O=Chihiro, CN=chihiro
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:a5:a7:ce:44:46:2e:8a:c6:e4:da:5e:8a:8d:58:
+                    e0:03:b8:26:75:68:b3:58:10:6c:f0:64:12:88:4c:
+                    ee:b7:cc:42:51:c2:cc:e2:db:74:68:9d:1a:fa:10:
+                    9b:de:97:62:40:2e:81:d9:6c:b6:c8:c6:c5:ae:bc:
+                    8d:45:a9:6b:f2:14:a6:18:b4:99:a8:c6:13:40:35:
+                    c5:03:9b:f9:a3:9b:c4:71:90:e4:cc:45:60:cb:75:
+                    ab:8d:63:63:5c:de:e8:e5:0f:58:15:b2:91:80:cc:
+                    51:a4:c8:cf:76:a8:bb:e6:e6:1c:68:ac:a3:85:fd:
+                    f9:9e:71:2b:10:a6:be:7e:d7:94:cf:27:54:0b:7a:
+                    a0:0f:59:da:55:79:04:0a:9b:3b:7c:23:e9:e2:2a:
+                    15:c2:9e:b0:c0:60:b9:6d:1f:48:d1:c4:58:e2:c4:
+                    12:51:29:62:ce:5a:f8:85:23:7b:61:38:df:6c:9e:
+                    85:d1:01:c2:66:c3:b8:0b:02:ff:97:d6:fd:e4:65:
+                    98:e1:9e:3f:a1:df:2c:56:bd:34:ad:df:e7:16:56:
+                    9a:2e:d4:2c:64:42:bf:2d:b5:e9:a5:1c:c2:d7:dd:
+                    44:97:71:7d:dd:9a:8a:66:ae:28:1e:1a:2a:bf:7d:
+                    f7:a5:97:79:b4:99:cc:0f:81:67:a1:9e:3c:a5:c9:
+                    bb:e3
+                Exponent: 65537 (0x10001)
+
+                 ~ REDACTED ~
+'''
+
+'''
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 13099412999179996462 (0xb5ca76b816420d2e)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: O=ksnctf, CN=ksnctf.sweetduet.info
+        Validity
+            Not Before: Nov  4 02:00:46 2013 GMT
+            Not After : Dec  4 02:00:46 2013 GMT
+        Subject: C=JP, L=Otowa, O=Kei, CN=kei
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:a4:da:ad:49:ea:e0:b5:c5:9d:a0:45:29:78:ae:
+                    98:7e:1b:96:f1:49:de:db:62:27:4c:97:f9:9a:c4:
+                    54:4a:a9:0d:b4:aa:f9:a0:96:7f:11:8b:70:09:09:
+                    7b:cb:0b:ae:b4:a1:96:36:77:7a:77:47:e0:6a:d8:
+                    44:96:c9:c6:1d:18:a7:b5:ca:77:65:85:a8:17:52:
+                    6e:d6:d9:f0:f2:ab:d8:c4:34:c6:2c:bf:02:5e:b7:
+                    ce:5a:83:e4:a7:f9:93:8f:38:62:de:24:e6:29:2f:
+                    43:27:0f:fd:a7:57:c1:7a:aa:79:7f:f9:fe:18:fd:
+                    1c:b2:39:21:dc:58:5d:45:50:38:4f:f5:c4:f2:4e:
+                    6d:fc:6d:4f:44:b5:69:34:58:08:23:92:47:c2:0d:
+                    26:6c:d0:f5:e3:73:88:9e:d4:e4:59:59:0b:7d:74:
+                    2d:28:37:c1:c4:8d:cf:94:18:e2:21:91:ab:4a:0b:
+                    ca:0e:d7:9b:1d:45:c0:ca:5d:36:ea:69:60:c9:36:
+                    0c:11:41:23:29:fd:5d:90:ff:34:67:f2:d8:2e:23:
+                    02:1a:df:3b:6d:8b:e2:49:03:b7:6e:ff:c9:38:15:
+                    4e:c2:19:f3:44:11:8f:1c:41:fe:c3:11:71:b6:29:
+                    45:a0:7e:35:76:2a:96:1a:05:79:53:89:08:60:52:
+                    de:c7
+                Exponent: 65537 (0x10001)
+
+                 ~ REDACTED ~
+'''
+
+192.168.0.39 serves SSL certificate with serial number 13099412999179996463.
+192.168.0.40 serves SSL certificate with serial number 13099412999179996462.
+Both SSL certificates are signed by root certificate (serial number: 10734611180456597475)
+
+We need RSA private keys for 192.168.0.39 and 192.168.0.40 in order to decrypt traffic but how can we recover the keys?
+
+Let's checkout certs. Modulus field represents N and Exponent field represents E for RSA encryption. N is multiplier for prime number p and q:
+
+'''
+N = p * q
+'''
+
+Usually the value and p and q are kept secret because if we know these values we can ultimately recover RSA private key and decrypt the data. N is 2048bit which is large enough to prevent brute force attack so brute forcing p and q from N is almost impossible. (If N is not large enough you can factorize N and get p and q using a tool like http://factordb.com/)
+
+So far, traffic seems pretty secure but remember the hint "Two certificates are similar". The hint indicates there are some similarity between the two certificates. Eventually I came up with an idea 'Maybe two certificates are using same p (or q) for RSA encryption'. If two certificates are using identical p then we can obtain p by calculating greatest common divisor of N from 192.168.0.39 and N from  192.168.0.40. If we can obtain p, calculating q is very easy, you just divide N with p.
+
+I did some research on RSA encryption / decryption routine and wrote the following script in order to calculate relevant values:
+
+'''
+#!/usr/bin/env python
+
+## Code inspired from https://pashango-p.hatenadiary.org/entry/20090706/1246897957
+
+# get greatest common divisor
+def gcd(a, b):
+     while b:
+          a, b = b, a%b
+     return a
+# get least common multiple
+def lcm(a, b):
+    return a * b / gcd(a,b)
+# get d
+'''
+1 < d < l
+e * d mod l = 1
+'''
+def get_d(a, b):
+    if b == 0:
+        u = 1
+        v = 0
+    else:
+        q = a / b
+        r = a % b
+        (u0, v0) = get_d(b, r)
+        u = v0
+        v = u0 - q * v0
+    return (u, v)
+
+# N for 192.168.0.39, 13099412999179996463.crt
+N1 = 0x00a5a7ce44462e8ac6e4da5e8a8d58e003b8267568b358106cf06412884ceeb7cc4251c2cce2db74689d1afa109bde9762402e81d96cb6c8c6c5aebc8d45a96bf214a618b499a8c6134035c5039bf9a39bc47190e4cc4560cb75ab8d63635cdee8e50f5815b29180cc51a4c8cf76a8bbe6e61c68aca385fdf99e712b10a6be7ed794cf27540b7aa00f59da5579040a9b3b7c23e9e22a15c29eb0c060b96d1f48d1c458e2c412512962ce5af885237b6138df6c9e85d101c266c3b80b02ff97d6fde46598e19e3fa1df2c56bd34addfe716569a2ed42c6442bf2db5e9a51cc2d7dd4497717ddd9a8a66ae281e1a2abf7df7a59779b499cc0f8167a19e3ca5c9bbe3
+# N for 192.168.0.40, 13099412999179996462.crt
+N2 = 0x00a4daad49eae0b5c59da0452978ae987e1b96f149dedb62274c97f99ac4544aa90db4aaf9a0967f118b7009097bcb0baeb4a19636777a7747e06ad84496c9c61d18a7b5ca776585a817526ed6d9f0f2abd8c434c62cbf025eb7ce5a83e4a7f9938f3862de24e6292f43270ffda757c17aaa797ff9fe18fd1cb23921dc585d4550384ff5c4f24e6dfc6d4f44b569345808239247c20d266cd0f5e373889ed4e459590b7d742d2837c1c48dcf9418e22191ab4a0bca0ed79b1d45c0ca5d36ea6960c9360c11412329fd5d90ff3467f2d82e23021adf3b6d8be24903b76effc938154ec219f344118f1c41fec31171b62945a07e35762a961a05795389086052dec7
+
+p = gcd(N1, N2)
+q1 = N1 / p
+q2 = N2 / p
+l1 = lcm((p - 1), (q1 - 1))
+l2 = lcm((p - 1), (q2 - 1))
+e = 65537
+d1 = get_d(e, l1)[0]
+if d1 < 0:
+	d1 += l1
+d2 = get_d(e, l2)[0]
+if d2 < 0:
+	d2 += l2
+
+print('p: ' + str(p))
+print('')
+print('N for 192.168.0.39: ' + str(p * q1))
+print('q for 192.168.0.39: ' + str(q1))
+print('l for 192.168.0.39: ' + str(l1))
+print('d for 192.168.0.39: ' + str(d1))
+print('e1 for 192.168.0.39: ' + str(d1 % (p - 1)))
+print('e2 for 192.168.0.39: ' + str(d1 % (q1 - 1)))
+print('coeff for 192.168.0.39: ' + str((q1 ^ - 1) % p))
+print('')
+print('N for 192.168.0.40: ' + str(p * q2))
+print('q for 192.168.0.40: ' + str(q2))
+print('l for 192.168.0.40: ' + str(l2))
+print('d for 192.168.0.40: ' + str(d2))
+print('e1 for 192.168.0.40: ' + str(d2 % (p - 1)))
+print('e2 for 192.168.0.40: ' + str(d2 % (q2 - 1)))
+print('coeff for 192.168.0.40: ' + str((q2 ^ - 1) % p)) 
+'''
+These values are later used to generate openssl asn1parse file
+https://stackoverflow.com/questions/19850283/how-to-generate-rsa-keys-using-specific-input-numbers-in-openssl
+https://www.openssl.org/docs/manmaster/man3/ASN1_generate_nconf.html
+https://www.openssl.org/docs/man1.0.2/man1/asn1parse.html
+'''
+'''
+
+Once we got relevant data from above script, we need to create RSA private key using those data. I decided to use openssl asn1parse command for key creation. asn1parse command reads relevant data from configuration file and creates RSA private key.
+
+syntax for configuration file can be found from the following link:
+
+https://www.openssl.org/docs/manmaster/man3/ASN1_generate_nconf.html
+https://www.openssl.org/docs/man1.0.2/man1/asn1parse.html
+https://stackoverflow.com/questions/19850283/how-to-generate-rsa-keys-using-specific-input-numbers-in-openssl
+
+conf file for 192.168.0.39:
+
+'''
+asn1=SEQUENCE:private_key
+[private_key]
+version=INTEGER:0
+
+n=INTEGER:0x00a5a7ce44462e8ac6e4da5e8a8d58e003b8267568b358106cf06412884ceeb7cc4251c2cce2db74689d1afa109bde9762402e81d96cb6c8c6c5aebc8d45a96bf214a618b499a8c6134035c5039bf9a39bc47190e4cc4560cb75ab8d63635cdee8e50f5815b29180cc51a4c8cf76a8bbe6e61c68aca385fdf99e712b10a6be7ed794cf27540b7aa00f59da5579040a9b3b7c23e9e22a15c29eb0c060b96d1f48d1c458e2c412512962ce5af885237b6138df6c9e85d101c266c3b80b02ff97d6fde46598e19e3fa1df2c56bd34addfe716569a2ed42c6442bf2db5e9a51cc2d7dd4497717ddd9a8a66ae281e1a2abf7df7a59779b499cc0f8167a19e3ca5c9bbe3
+
+e=INTEGER:65537
+
+d=INTEGER:8566714323193387241533551691060080168891674050250237988205927809349854284894645619760876145251949388292586023528770674935072239623894293559039643968338434657986446979572291187300097948455763234189577375618867701604949405308947193489007750344453105947412716814405382095468641021785271570459923729507909741499707845816239136139788301279838110023485769201034369131599918330708403193400459648853411206484684072978082474413577930042329538710833767470743672903185541715112516840108457384544442265904137381150286543036735403772775035816261347960698500821046180454914714319986111952833749279746888048019543808256361571963933
+
+p=INTEGER:149964660518396798660782215517197000054264985822608779681144262791391323000835825727277636178043097046988857828384650158626906824855399961360412435818827649355003329726451846544435103030378220357694459358803967598155925736581896165952170564324730092516286266118841005062382011803493961966912439338500328959743
+
+q=INTEGER:139446642537534304777628614240154046272434122794892522124374234093313897652592278876204620931659231555942782873768406065030569534203407105601097455479995730772421725109267044663491213232687718387909353507690622331780468229128999879032054673690005684809410661625656125511253714586807242182927209779610158700317
+
+exp1=INTEGER:79878028737601590668638869329910018430722830234762459085850495529577006932163159810302695022706691360853976365614101465391276125578715868153398497178138083581556315273677175628624144782099316664577234040269296747126463762647067021088215360169792301593886216605528202461474148466307081867357056814141164278601
+
+exp2=INTEGER:53972619048889866411177310966564651078727496815771910771119776950592799912349600164392731045859103523933726450341171982934303169272374759916954362508286490177659176940074581609382762635768446291830701147078449212932287976259001952050400519596879384178029370322053088785242866231425797720556809180609293766761
+
+coeff=INTEGER:10518017980862493883153601277042953781830863027716257556770028698077425348243546851073015246383865491046074954616244093596337290651992855759314980338831918582581604617184801880943889797690501969785105851113345266375457507452896286920115890634724407706875604493184879551128297216686719783985229558890170259425
+'''
+
+conf file for 192.168.0.40:
+
+'''
+asn1=SEQUENCE:private_key
+[private_key]
+version=INTEGER:0
+
+n=INTEGER:0x00a4daad49eae0b5c59da0452978ae987e1b96f149dedb62274c97f99ac4544aa90db4aaf9a0967f118b7009097bcb0baeb4a19636777a7747e06ad84496c9c61d18a7b5ca776585a817526ed6d9f0f2abd8c434c62cbf025eb7ce5a83e4a7f9938f3862de24e6292f43270ffda757c17aaa797ff9fe18fd1cb23921dc585d4550384ff5c4f24e6dfc6d4f44b569345808239247c20d266cd0f5e373889ed4e459590b7d742d2837c1c48dcf9418e22191ab4a0bca0ed79b1d45c0ca5d36ea6960c9360c11412329fd5d90ff3467f2d82e23021adf3b6d8be24903b76effc938154ec219f344118f1c41fec31171b62945a07e35762a961a05795389086052dec7
+
+e=INTEGER:65537
+
+d=INTEGER:6169890145185265910050899922592095142904412612790090761620809903795726801396319761050735365127978355880433798453111647256965210502434640398953029916335498789777740030831886069390341965736381996045608283082023263318280888743080276494701776568863329355475780017066985045582311038930649877284625858201626808409976897830826499719784969891127690293929056523737678406311167273414410880232835643896442333717245967933083374627853804595919069965493866070706780435180438827443655266497008089795829130939570060288628719021178407574164755541524613913948522290336694808503268964089567488327736235201033766369884841934993142274913
+
+p=INTEGER:149964660518396798660782215517197000054264985822608779681144262791391323000835825727277636178043097046988857828384650158626906824855399961360412435818827649355003329726451846544435103030378220357694459358803967598155925736581896165952170564324730092516286266118841005062382011803493961966912439338500328959743
+
+q=INTEGER:138772131683595539379264396620735603425702925342291987755841498194704959931781364169698055070785331880014332847610595576230231417278730047109315439655930883451174914691703480278864120207968103099432047374677543229331540706277526947368767969434429565383119554767303697722958157645742281397722992120606265055289
+
+exp1=INTEGER:79878028737601590668638869329910018430722830234762459085850495529577006932163159810302695022706691360853976365614101465391276125578715868153398497178138083581556315273677175628624144782099316664577234040269296747126463762647067021088215360169792301593886216605528202461474148466307081867357056814141164278601
+
+exp2=INTEGER:5429173530017226344941543142584587136785362475817273549383975485164464611823663239560947452606826539822645977406252453689584713274984571170305091586093455378928124285053141331385440349927982915710877358876256478630484617405367641073798328785722224173250507933279928604630433437656334734634813186402100547809
+
+coeff=INTEGER:11192528834801259281517818896461396628562060480316791925302764596686363069054461557579581107257765166974524980774054582396675407576669914251096996162896765903828415034748366265570982822410117258262411984126424368824385030304369218583402594890300527133166711351537307339423854157751680569189447217894063904453
+'''
+
+Now run following openssl command to generate RSA private key in DER format:
+'''
+openssl asn1parse -genconf 192_168_0_39.conf -out 192_168_0_39_privatekey.der
+openssl asn1parse -genconf 192_168_0_40.conf -out 192_168_0_40_privatekey.der
+'''
+
+Then we convert RSA private key into PEM format because we later need to import the private key to wireshark and decrypt the traffic:
+'''
+openssl rsa -inform der -in 192_168_0_39_privatekey.der -out 192_168_0_39_privatekey.pem
+openssl rsa -inform der -in 192_168_0_40_privatekey.der -out 192_168_0_40_privatekey.pem
+'''
+
+Ok now we're ready to decrypt traffic. Open PCAP with wireshark, go to Preferences > Protocols > SSL > click "Edit" on RSA keys list > click + button > fill up the fields and click OK
+
+You will see two HTTP GET requests for the file 'flag.jpg'. Extract the JPEG image files and you will see the following flag:
+
+'''
+FLAG_txkbcPbk2ZJagaXs
+'''
+
+Ref:
+https://www.digicert.co.jp/welcome/pdf/wp_ssl_negotiation.pdf
+https://tools.ietf.org/id/draft-mathewson-no-gmtunixtime-00.txt
+https://www.atmarkit.co.jp/ait/articles/0101/16/news002_3.html
+https://study.com/academy/lesson/single-sided-vs-dual-sided-certificates-similarities-differences.html
+https://www.comparitech.com/net-admin/decrypt-ssl-with-wireshark/
+https://ozuma.hatenablog.jp/entry/20140413/1397397632
+https://hatsoffsecurity.com/2018/10/30/decrypting-traffic-in-wireshark/
+https://major.io/2007/09/14/check-the-modulus-of-an-ssl-certificate-and-key-with-openssl/
+https://ctf-wiki.github.io/ctf-wiki/crypto/asymmetric/rsa/rsa_module_attack/
+https://medium.com/bugbountywriteup/tokyowesterns-ctf-4th-2018-writeup-part-4-f64e1583b315
+https://stackoverflow.com/questions/3116907/rsa-get-exponent-and-modulus-given-a-public-key
+https://0day.work/how-i-recovered-your-private-key-or-why-small-keys-are-bad/
+https://kusano-k.hatenadiary.com/entry/20140323/1395571265
+https://ptr-yudai.hatenablog.com/entry/2019/01/28/231352
+https://jp.globalsign.com/ssl-pki-info/ssl_practices/authentification.html

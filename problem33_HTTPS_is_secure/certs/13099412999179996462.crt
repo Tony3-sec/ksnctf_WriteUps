@@ -1,0 +1,67 @@
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 13099412999179996462 (0xb5ca76b816420d2e)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: O=ksnctf, CN=ksnctf.sweetduet.info
+        Validity
+            Not Before: Nov  4 02:00:46 2013 GMT
+            Not After : Dec  4 02:00:46 2013 GMT
+        Subject: C=JP, L=Otowa, O=Kei, CN=kei
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:a4:da:ad:49:ea:e0:b5:c5:9d:a0:45:29:78:ae:
+                    98:7e:1b:96:f1:49:de:db:62:27:4c:97:f9:9a:c4:
+                    54:4a:a9:0d:b4:aa:f9:a0:96:7f:11:8b:70:09:09:
+                    7b:cb:0b:ae:b4:a1:96:36:77:7a:77:47:e0:6a:d8:
+                    44:96:c9:c6:1d:18:a7:b5:ca:77:65:85:a8:17:52:
+                    6e:d6:d9:f0:f2:ab:d8:c4:34:c6:2c:bf:02:5e:b7:
+                    ce:5a:83:e4:a7:f9:93:8f:38:62:de:24:e6:29:2f:
+                    43:27:0f:fd:a7:57:c1:7a:aa:79:7f:f9:fe:18:fd:
+                    1c:b2:39:21:dc:58:5d:45:50:38:4f:f5:c4:f2:4e:
+                    6d:fc:6d:4f:44:b5:69:34:58:08:23:92:47:c2:0d:
+                    26:6c:d0:f5:e3:73:88:9e:d4:e4:59:59:0b:7d:74:
+                    2d:28:37:c1:c4:8d:cf:94:18:e2:21:91:ab:4a:0b:
+                    ca:0e:d7:9b:1d:45:c0:ca:5d:36:ea:69:60:c9:36:
+                    0c:11:41:23:29:fd:5d:90:ff:34:67:f2:d8:2e:23:
+                    02:1a:df:3b:6d:8b:e2:49:03:b7:6e:ff:c9:38:15:
+                    4e:c2:19:f3:44:11:8f:1c:41:fe:c3:11:71:b6:29:
+                    45:a0:7e:35:76:2a:96:1a:05:79:53:89:08:60:52:
+                    de:c7
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha1WithRSAEncryption
+         7b:19:09:cf:13:cd:9d:88:43:6b:92:99:e0:ce:7d:aa:6c:d2:
+         b9:41:80:f1:4f:45:c0:d0:d9:84:dd:c9:cb:46:12:67:44:e4:
+         00:c5:ae:37:5c:8a:8b:ac:61:d2:cd:97:e0:0d:72:f4:29:8a:
+         e0:28:94:b3:0f:53:d8:d0:e0:83:e0:ea:e3:a0:66:57:6c:c6:
+         6e:43:93:3a:59:19:71:8e:1a:f5:77:fe:53:87:c3:82:7f:ee:
+         9b:5f:ce:4c:b3:31:43:cb:2e:ed:88:af:c5:25:1a:19:97:14:
+         b3:bc:6f:64:8f:28:a4:5a:1d:5c:8b:dc:90:3a:d4:31:d1:c0:
+         5d:ec:15:db:c9:2d:8f:6e:e3:f0:b2:32:67:40:8c:8d:12:51:
+         4c:89:9f:e0:6f:97:0f:25:5f:df:70:53:1a:65:af:24:c1:ef:
+         71:18:c1:b9:eb:ae:91:42:69:e6:1c:bf:36:a8:9d:75:55:25:
+         70:44:2e:39:51:73:ad:89:a5:ce:02:0f:1a:05:0e:63:a6:c8:
+         e6:c3:43:af:a5:dc:aa:08:7d:ed:ae:70:55:8b:84:6e:50:65:
+         b6:55:39:f1:45:94:1d:02:71:d0:6d:d8:aa:68:8f:53:2d:a1:
+         a5:98:ca:3f:d7:08:31:49:39:38:13:95:3a:ef:84:e0:09:45:
+         06:ad:e9:9a
+-----BEGIN CERTIFICATE-----
+MIIC5jCCAc4CCQC1yna4FkINLjANBgkqhkiG9w0BAQUFADAxMQ8wDQYDVQQKDAZr
+c25jdGYxHjAcBgNVBAMMFWtzbmN0Zi5zd2VldGR1ZXQuaW5mbzAeFw0xMzExMDQw
+MjAwNDZaFw0xMzEyMDQwMjAwNDZaMDkxCzAJBgNVBAYTAkpQMQ4wDAYDVQQHDAVP
+dG93YTEMMAoGA1UECgwDS2VpMQwwCgYDVQQDDANrZWkwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCk2q1J6uC1xZ2gRSl4rph+G5bxSd7bYidMl/maxFRK
+qQ20qvmgln8Ri3AJCXvLC660oZY2d3p3R+Bq2ESWycYdGKe1yndlhagXUm7W2fDy
+q9jENMYsvwJet85ag+Sn+ZOPOGLeJOYpL0MnD/2nV8F6qnl/+f4Y/RyyOSHcWF1F
+UDhP9cTyTm38bU9EtWk0WAgjkkfCDSZs0PXjc4ie1ORZWQt9dC0oN8HEjc+UGOIh
+katKC8oO15sdRcDKXTbqaWDJNgwRQSMp/V2Q/zRn8tguIwIa3ztti+JJA7du/8k4
+FU7CGfNEEY8cQf7DEXG2KUWgfjV2KpYaBXlTiQhgUt7HAgMBAAEwDQYJKoZIhvcN
+AQEFBQADggEBAHsZCc8TzZ2IQ2uSmeDOfaps0rlBgPFPRcDQ2YTdyctGEmdE5ADF
+rjdciousYdLNl+ANcvQpiuAolLMPU9jQ4IPg6uOgZldsxm5DkzpZGXGOGvV3/lOH
+w4J/7ptfzkyzMUPLLu2Ir8UlGhmXFLO8b2SPKKRaHVyL3JA61DHRwF3sFdvJLY9u
+4/CyMmdAjI0SUUyJn+Bvlw8lX99wUxplryTB73EYwbnrrpFCaeYcvzaonXVVJXBE
+LjlRc62Jpc4CDxoFDmOmyObDQ6+l3KoIfe2ucFWLhG5QZbZVOfFFlB0CcdBt2Kpo
+j1MtoaWYyj/XCDFJOTgTlTrvhOAJRQat6Zo=
+-----END CERTIFICATE-----
