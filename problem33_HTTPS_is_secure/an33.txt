@@ -133,7 +133,7 @@ Let's checkout certs. Modulus field represents N and Exponent field represents E
 N = p * q
 '''
 
-Usually the value and p and q are kept secret because if we know these values we can ultimately recover RSA private key and decrypt the data. N is 2048bit which is large enough to prevent brute force attack so brute forcing p and q from N is almost impossible. (If N is not large enough you can factorize N and get p and q using a tool like http://factordb.com/)
+Usually the value p and q are kept secret because if we know these values we can ultimately recover RSA private key and decrypt the data. N is 2048bit which is large enough to prevent brute force attack so brute forcing p and q from N is almost impossible. (If N is not large enough you can factorize N and get p and q using a tool like http://factordb.com/)
 
 So far, traffic seems pretty secure but remember the hint "Two certificates are similar". The hint indicates there are some similarity between the two certificates. Eventually I came up with an idea 'Maybe two certificates are using same p (or q) for RSA encryption'. If two certificates are using identical p then we can obtain p by calculating greatest common divisor of N from 192.168.0.39 and N from  192.168.0.40. If we can obtain p, calculating q is very easy, you just divide N with p.
 
