@@ -1,6 +1,0 @@
-What's this?
-↓
-#!/usr/bin/python
-print "Hello world"
-The flag is FLAG_S?????? (in capital letters).
-Don't use a brute force attack :(
